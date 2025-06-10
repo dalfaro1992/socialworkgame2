@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Who Said That?!</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background-color: #fff0f5;
+      text-align: center;
+      padding: 20px;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: #fdf6e3;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+    h1 {
+      color: #ff69b4;
+    }
+    .quote {
+      font-size: 1.5em;
+      font-style: italic;
+      margin: 30px 0;
+    }
+    .answers button {
+      margin: 10px;
+      padding: 10px 20px;
+      border: none;
+      background-color: #87ceeb;
+      border-radius: 10px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    .answers button:hover {
+      background-color: #4682b4;
+      color: #fff;
+    }
+    #feedback {
+      margin-top: 20px;
+      font-size: 1.2em;
+    }
+    #gifContainer img {
+      margin-top: 20px;
+      max-width: 100%;
+      border-radius: 12px;
+    }
+    #finalScore {
+      font-size: 1.6em;
+      font-weight: bold;
+      margin-top: 30px;
+      color: #2a9d8f;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎤 Who Said That?! — Brighton High School Edition 🎉</h1>
+    <div id="game">
+      <div class="quote" id="quote">Loading...</div>
+      <div class="answers">
+        <button onclick="checkAnswer('Student')">🧒 Student</button>
+        <button onclick="checkAnswer('Teacher')">🍎 Teacher</button>
+        <button onclick="checkAnswer('TikTok')">📱 TikTok</button>
+      </div>
+      <div id="feedback"></div>
+      <div id="gifContainer"></div>
+    </div>
+    <div id="finalScore"></div>
+  </div>
+
+  <audio id="bgMusic" src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/KieLoKaz/Free_Songs_Volume_2/KieLoKaz_-_04_-_Groovy_Beach_Dance.mp3" autoplay loop></audio>
+
+  <script>
+    const quotes = [
+      { text: "Can I go to the nurse? I have senioritis.", source: "Student" },
+      { text: "This is not in the curriculum, but it’s important.", source: "Teacher" },
+      { text: "If your vibe is off, I’m out.", source: "TikTok" },
+      { text: "I’m emotionally unavailable between periods 1 and 7.", source: "Teacher" },
+      { text: "That assignment gave me an existential crisis.", source: "Student" },
+      { text: "Normalize bringing snacks to every meeting.", source: "TikTok" },
+      { text: "You don’t even GO here!", source: "TikTok" },
+      { text: "I can't help you unless you help yourself.", source: "Teacher" }
+    ];
+
+    const correctGifs = [
+      "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif",
+      "https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif",
+      "https://media.giphy.com/media/l2JJKs3I69qfaQleE/giphy.gif"
+    ];
+
+    const wrongGifs = [
+      "https://media.giphy.com/media/3o6ZtpxSZbQRRnwCKQ/giphy.gif",
+      "https://media.giphy.com/media/l2JehQ2GitHGdVG9y/giphy.gif",
+      "https://media.giphy.com/media/jWexOOlYe241y/giphy.gif"
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    function showQuote() {
+      const q = quotes[current];
+      document.getElementById("quote").textContent = `"${q.text}"`;
+      document.getElementById("feedback").textContent = "";
+      document.getElementById("gifContainer").innerHTML = "";
+    }
+
+    function checkAnswer(choice) {
+      const feedback = document.getElementById("feedback");
+      const gifContainer = document.getElementById("gifContainer");
+      const correct = quotes[current].source === choice;
+      const gif = document.createElement("img");
+      gif.src = correct
+        ? correctGifs[Math.floor(Math.random() * correctGifs.length)]
+        : wrongGifs[Math.floor(Math.random() * wrongGifs.length)];
+
+      gifContainer.appendChild(gif);
+
+      feedback.textContent = correct
+        ? "✅ Nailed it! That’s exactly who said it."
+        : `❌ Nope! It was actually a ${quotes[current].source}.`;
+
+      if (correct) score++;
+      current++;
+
+      if (current < quotes.length) {
+        setTimeout(showQuote, 3000);
+      } else {
+        endGame();
+      }
+    }
+
+    function endGame() {
+      document.getElementById("game").style.display = "none";
+      document.getElementById("finalScore").innerHTML = `🎊 You got ${score}/${quotes.length} right! <br> You’ve got social work intuition! 🧠✨`;
+    }
+
+    window.onload = showQuote;
+  </script>
+</body>
+</html>
